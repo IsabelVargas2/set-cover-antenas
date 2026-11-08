@@ -1,0 +1,13 @@
+\section{Conclusiones}
+
+\begin{enumerate}
+\item El problema de cobertura de antenas se formuló como un modelo de programación lineal entera binaria con 500 variables y 500 restricciones de cobertura, que minimiza el costo total de instalación y exige que cada cliente sea cubierto por al menos una antena.
+\item Para esta instancia densa de $500\times500$, el solver exacto HiGHS no logró demostrar la optimalidad en 600 segundos: terminó con una solución de costo 50\,119 y una brecha de 38,5\,\% respecto a su mejor cota inferior. Esto ilustra por qué el Set Cover, por ser NP-difícil, es costoso de resolver de forma exacta cuando crece el tamaño de la instancia.
+\item El Algoritmo Genético con reparación diseñado encontró soluciones factibles en pocos segundos. Su mejor resultado (48\,878) fue 2,5\,\% más barato que la mejor solución del solver en el tiempo límite, y 6,1\,\% más barato que la heurística voraz. El AG es entonces una alternativa práctica cuando el tiempo de cómputo es limitado.
+\item El AG es estocástico: el costo varía de una corrida a otra (desviación de unos 1\,500 en la configuración base). Aumentar la población o usar una búsqueda más larga reduce esa variabilidad (desviación de 606 en la configuración extendida), a cambio de más tiempo.
+\item El AG mostró convergencia prematura: mejora rápido en las primeras generaciones y luego se estanca. Estrategias como mayor mutación, mecanismos de diversidad o búsqueda local podrían mejorar los resultados.
+\item No es posible afirmar que el AG alcanzó el óptimo, porque el solver no lo demostró. El óptimo está entre 30\,817 y 48\,878.
+\end{enumerate}
+
+\subsection*{Limitaciones y trabajo futuro}
+El estudio usa una sola instancia, un solo solver y un límite de 600 segundos. Trabajo futuro: dar más tiempo al solver o usar la solución del AG como punto de partida del método exacto, probar otros operadores de cruce y de selección, incorporar búsqueda local, y evaluar el método en más instancias, por ejemplo las de la OR-Library, con pruebas estadísticas entre configuraciones.

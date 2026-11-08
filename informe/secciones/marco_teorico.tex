@@ -1,0 +1,31 @@
+\section{Marco teórico}
+
+\subsection{El problema de cobertura de conjuntos (Set Cover)}
+Sea $U$ un universo de $m$ elementos y sea $\mathcal{S}=\{S_1,\dots,S_n\}$ una colección de subconjuntos de $U$, cada uno con un costo $c_j>0$. El problema de cobertura de conjuntos consiste en elegir una subcolección $\mathcal{C}\subseteq\mathcal{S}$ tal que todo elemento de $U$ pertenezca a al menos un subconjunto elegido, de modo que la suma de los costos de $\mathcal{C}$ sea mínima. Cuando todos los costos son iguales, el problema se reduce a minimizar el número de subconjuntos seleccionados (versión sin pesos); cuando los costos difieren, se habla de la versión ponderada, que es la que se estudia aquí.
+
+En el contexto de telecomunicaciones, el universo $U$ es el conjunto de clientes, cada subconjunto $S_j$ es el conjunto de clientes que quedan cubiertos por una antena instalada en la ubicación $j$, y $c_j$ es el costo de instalar esa antena.
+
+\subsection{Complejidad computacional}
+La versión de decisión del Set Cover fue una de las 21 problemas NP-completos identificados por Karp \cite{karp72}. Por tanto, salvo que $\mathrm{P}=\mathrm{NP}$, no existe un algoritmo que lo resuelva en tiempo polinomial para toda instancia \cite{garey79}. Además, Feige \cite{feige98} mostró que, bajo supuestos estándar de complejidad, no es posible aproximarlo con un factor mejor que $(1-\varepsilon)\ln m$. La heurística voraz de Chv\'atal \cite{chvatal79}, que en cada paso elige el subconjunto con menor costo por elemento nuevo cubierto, alcanza una garantía de $H(d)\le 1+\ln d$ veces el óptimo, donde $d$ es el tamaño del subconjunto más grande; esta es esencialmente la mejor garantía posible en el peor caso.
+
+\subsection{Programación lineal entera binaria}
+El Set Cover se formula de manera natural como un problema de programación lineal entera binaria (PLEB): las variables de decisión toman únicamente los valores 0 o 1, y tanto la función objetivo como las restricciones son lineales \cite{wolsey98}. La relajación lineal del problema reemplaza la condición $x_j\in\{0,1\}$ por $0\le x_j\le 1$; su valor óptimo es una cota inferior del costo óptimo entero, y es la base de los métodos de solución exacta.
+
+\subsection{Métodos exactos: ramificación y acotamiento}
+El método de ramificación y acotamiento (\textit{branch and bound}) \cite{landdoig60} resuelve problemas enteros explorando un árbol de subproblemas. En cada nodo se resuelve la relajación lineal; si su valor es peor que la mejor solución entera conocida (la \textit{incumbente}), el nodo se descarta; si la solución es entera, se actualiza la incumbente; en otro caso se ramifica sobre una variable fraccionaria. Los solvers modernos añaden planos de corte, heurísticas de primal y preprocesamiento. En el caso del Set Cover, Caprara, Fischetti y Toth \cite{caprara00} revisan los algoritmos exactos y heurísticos y muestran que, a medida que crece el número de filas y columnas, los métodos exactos requieren tiempos que pueden volverse prohibitivos aun con solvers de alto desempeño.
+
+\subsection{Metaheurísticas y Algoritmos Genéticos}
+Una \textit{metaheurística} es un marco de búsqueda general que no garantiza optimalidad, pero que suele entregar soluciones de buena calidad en tiempos razonables. Los Algoritmos Genéticos, propuestos por Holland \cite{holland75} y popularizados por Goldberg \cite{goldberg89}, se inspiran en la evolución natural. Mantienen una \textit{población} de soluciones candidatas (\textit{cromosomas}) que evoluciona durante varias \textit{generaciones} mediante cuatro mecanismos \cite{eiben15}:
+\begin{itemize}
+\item \textbf{Evaluación (fitness):} una función que mide la calidad de cada individuo.
+\item \textbf{Selección:} los individuos mejores tienen mayor probabilidad de reproducirse; una forma común es la selección por torneo, donde se elige al mejor de $k$ individuos tomados al azar.
+\item \textbf{Cruce (\textit{crossover}):} combina el material genético de dos padres para producir hijos; en el cruce uniforme, cada gen del hijo se toma de uno de los dos padres con probabilidad $1/2$.
+\item \textbf{Mutación:} modifica aleatoriamente algunos genes para mantener la diversidad y evitar la convergencia prematura.
+\end{itemize}
+Se suele añadir \textit{elitismo}, que copia los mejores individuos a la siguiente generación sin cambios, de modo que la mejor solución encontrada nunca se pierde.
+
+\subsection{Manejo de restricciones en el Algoritmo Genético}
+Un cromosoma binario cualquiera no tiene por qué ser factible: puede dejar clientes sin cubrir. Hay dos estrategias habituales. La primera es \textit{penalizar} el fitness de los individuos infactibles; es simple, pero la población puede pasar mucho tiempo explorando regiones infactibles. La segunda, empleada por Beasley y Chu \cite{beasley96} en su algoritmo genético para el Set Cover, es \textit{reparar} el cromosoma: se agregan columnas hasta lograr factibilidad y luego se eliminan las columnas redundantes. Esta es la estrategia adoptada en este trabajo, pues garantiza que todo individuo evaluado sea una solución válida.
+
+\subsection{Solver utilizado}
+Para la solución exacta se usó HiGHS \cite{highs18}, un solver de código abierto para programación lineal y entera mixta, accedido a través de la función \texttt{milp} de SciPy \cite{scipy20}.

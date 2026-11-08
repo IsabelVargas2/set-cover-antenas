@@ -1,0 +1,1 @@
+{'costo': 50118.99999999999, 'tiempo': 600.0340902805328, 'estado': 'Time limit reached. (HiGHS Status 13: Time limit reached)', 'optimo': False, 'cota': 30817.0, 'gap': 0.3851234062930225, 'limite_tiempo': 600.0}
