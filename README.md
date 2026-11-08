@@ -1,7 +1,7 @@
 # Cobertura de clientes con antenas: Set Cover, solución exacta y Algoritmo Genético
 
 Proyecto de **Investigación de Operaciones I** — Universidad Autónoma de Bucaramanga (UNAB).
-Autores: María Isabel Vargas Mendoza y *[nombre del segundo integrante]*.
+Autores: María Isabel Vargas Mendoza y Oscar Ivan Vera Puerto.
 
 ## Problema
 Una empresa de telefonía debe cubrir a **500 clientes** instalando un subconjunto de **500 antenas** candidatas, cada una con un costo.
